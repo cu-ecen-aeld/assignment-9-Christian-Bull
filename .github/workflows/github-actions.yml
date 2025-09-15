@@ -13,6 +13,9 @@ jobs:
           FORCE_UNSAFE_CONFIGURE: 1
         timeout-minutes: 600
         steps:
+          - name: Fix SSH known_hosts for GitHub
+            run: |
+              ssh-keygen -f "$HOME/.ssh/known_hosts" -R github.com
           - uses: actions/checkout@v2
           - name: Checkout submodules
             run: git submodule update --init --recursive
