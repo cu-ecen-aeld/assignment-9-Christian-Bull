@@ -11,27 +11,27 @@ jobs:
         runs-on: self-hosted
         timeout-minutes: 600
         steps:
-          - name: Fix SSH known_hosts for GitHub
-            run: |
-              echo "HOME is $HOME"
-              mkdir -p $HOME/.ssh
-              echo "removing old github entries from known_hosts"
-              ssh-keygen -f "$HOME/.ssh/known_hosts" -R github.com
           - uses: actions/checkout@v2
+          - uses: webfactory/ssh-agent@v0.5.3
+            with:
+              ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           - name: Checkout submodules
             run: git submodule update --init --recursive
+          - name: Fix SSH known_hosts for GitHub
+            run: |
+              mkdir -p $HOME/.ssh
+              ssh-keygen -f "$HOME/.ssh/known_hosts" -R github.com || true
+              ssh-keyscan github.com >> $HOME/.ssh/known_hosts
+              chmod 600 $HOME/.ssh/known_hosts
           - uses: actions/cache@v3
             with:
               path: buildroot/output
               key: buildroot-${{ hashFiles('buildroot/.config') }}-${{ env.EXTERNAL_REL_BUILDROOT }}
-          - uses: webfactory/ssh-agent@v0.5.3
-            with:
-                ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
             run: ./full-test.sh
           - name: Cleanup
             if: always()
-            run: |
-              ssh-add -D
+            run: ssh-add -D
+
