@@ -13,7 +13,7 @@ set -e
 cd `dirname $0`
 
 # ensure aesd is rebuilt each time
-make -C buildroot aesd-assignments-dirclean
+make -C buildroot BR2_EXTERNAL=${EXTERNAL_REL_BUILDROOT} aesd-assignments-dirclean
 
 if [ ! -e buildroot/.config ]
 then
