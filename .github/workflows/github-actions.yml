@@ -13,10 +13,6 @@ jobs:
           FORCE_UNSAFE_CONFIGURE: 1
         timeout-minutes: 600
         steps:
-          - name: Configure SSH
-            run: |
-              mkdir -p ~/.ssh
-              echo -e "Host *\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
           - uses: actions/checkout@v2
           - name: Checkout submodules
             run: git submodule update --init --recursive
