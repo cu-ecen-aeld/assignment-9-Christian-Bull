@@ -17,12 +17,16 @@ jobs:
               ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           - name: Checkout submodules
             run: git submodule update --init --recursive
-          - name: Fix SSH known_hosts for GitHub
+          - name: Fix GitHub SSH known_hosts
             run: |
               mkdir -p $HOME/.ssh
               ssh-keygen -f "$HOME/.ssh/known_hosts" -R github.com || true
               ssh-keyscan github.com >> $HOME/.ssh/known_hosts
               chmod 600 $HOME/.ssh/known_hosts
+          - name: Configure SSH to ignore host key changes
+            run: |
+              mkdir -p $HOME/.ssh
+              echo -e "Host github.com\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile=/dev/null" >> $HOME/.ssh/config
           - uses: actions/cache@v3
             with:
               path: buildroot/output
