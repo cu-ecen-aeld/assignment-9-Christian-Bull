@@ -12,9 +12,6 @@ git submodule update
 set -e 
 cd `dirname $0`
 
-# ensure aesd is rebuilt each time
-make -C buildroot BR2_EXTERNAL=${EXTERNAL_REL_BUILDROOT} aesd-assignments-dirclean aesd-assignments -j$(nproc) V=1
-
 if [ ! -e buildroot/.config ]
 then
 	echo "MISSING BUILDROOT CONFIGURATION FILE"
@@ -23,6 +20,8 @@ then
 	then
 		echo "USING ${AESD_MODIFIED_DEFCONFIG}"
 		make -C buildroot defconfig BR2_EXTERNAL=${EXTERNAL_REL_BUILDROOT} BR2_DEFCONFIG=${AESD_MODIFIED_DEFCONFIG_REL_BUILDROOT}
+		make -C buildroot BR2_EXTERNAL=${EXTERNAL_REL_BUILDROOT} aesd-assignments-dirclean aesd-assignments -j$(nproc) V=1
+
 	else
 		echo "Run ./save_config.sh to save this as the default configuration in ${AESD_MODIFIED_DEFCONFIG}"
 		echo "Then add packages as needed to complete the installation, re-running ./save_config.sh as needed"
@@ -31,6 +30,8 @@ then
 else
 	echo "USING EXISTING BUILDROOT CONFIG"
 	echo "To force update, delete .config or make changes using make menuconfig and build again."
+	make -C buildroot BR2_EXTERNAL=${EXTERNAL_REL_BUILDROOT} aesd-assignments-dirclean aesd-assignments -j$(nproc) V=1
 	make -j$(nproc) -C buildroot BR2_EXTERNAL=${EXTERNAL_REL_BUILDROOT}
+	
 
 fi
