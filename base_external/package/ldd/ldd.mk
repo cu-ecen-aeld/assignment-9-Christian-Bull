@@ -5,13 +5,12 @@
 #
 ##############################################################
 
-LDD_VERSION = c999ce66e9b5f029e3d4160b0e82939e47ae04bf
+LDD_VERSION = 29278d4aad6a733f8c02f1cbb04b29cee8f0d6ae
 LDD_SITE = git@github.com:cu-ecen-aeld/assignment-7-Christian-Bull.git
 LDD_SITE_METHOD = git
 # LDD_GIT_SUBMODULES = YES
 
-define LDD_BUILD_CMDS
-	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) all
-endef
+LDD_MODULE_SUBDIRS = misc-modules scull
 
+$(eval $(kernel-module))
 $(eval $(generic-package))
