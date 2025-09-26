@@ -10,6 +10,8 @@ jobs:
         container: cuaesd/aesd-autotest:assignment5-buildroot
         runs-on: self-hosted
         timeout-minutes: 600
+        env:
+          FORCE_UNSAFE_CONFIGURE: 1
         steps:
           - uses: actions/checkout@v2
           - uses: webfactory/ssh-agent@v0.5.3
