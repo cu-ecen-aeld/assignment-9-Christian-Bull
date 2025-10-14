@@ -29,15 +29,6 @@ jobs:
             run: |
               mkdir -p $HOME/.ssh
               echo -e "Host github.com\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile=/dev/null" >> $HOME/.ssh/config
-          - uses: actions/cache@v3
-            with:
-              key: buildroot-${{ hashFiles('buildroot/.config') }}-${{ env.EXTERNAL_REL_BUILDROOT }}
-              path: |
-                buildroot/output/build
-                buildroot/output/host
-                buildroot/output/staging
-                buildroot/output/.br2*
-              compression: none
           - name: Run full test
             env:
               GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
